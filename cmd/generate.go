@@ -18,16 +18,16 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/ksrichard/gogen/service"
+	"github.com/ksrichard/gogen/util"
 	"github.com/spf13/cobra"
-	"gogen/service"
-	"gogen/util"
 )
 
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
 	Short: "Generating projects/folder structures based on a template",
-	Long: `Generating projects/folder structures based on a template`,
+	Long:  `Generating projects/folder structures based on a template`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// inputs
 		templateDir, _ := cmd.Flags().GetString("template-dir")

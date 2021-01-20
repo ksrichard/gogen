@@ -1,4 +1,4 @@
-module gogen
+module github.com/ksrichard/gogen
 
 go 1.15
 

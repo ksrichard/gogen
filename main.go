@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "gogen/cmd"
+import "github.com/ksrichard/gogen/cmd"
 
 func main() {
 	cmd.Execute()
