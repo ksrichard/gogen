@@ -26,7 +26,7 @@ You can use everything in directory/file names and files content that can be don
 
 **Note**: Here when you pass any variables to the generator, they will be used for generating both folder/file names and contents of files!
 
-## Example usage using CLI
+## Example usage of CLI
 - Build the CLI using the following command executed in root of the project: `go build`
 
 - Then simply run an example:
@@ -36,5 +36,24 @@ You can use everything in directory/file names and files content that can be don
 
 - Finally see the output folder that was generated (and also check for file contents):
 ![Logo](images/screenshot1.png)
+
+## Example usage of Library
+```go
+package main
+
+import (
+	gogen "github.com/ksrichard/gogen/service"
+)
+
+func main() {
+	err := gogen.Generate("examples/simple-project", "output/GoTest", map[string]string{
+		"module": "GoTest",
+		"project_name": "Go Test",
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+```
 
 
