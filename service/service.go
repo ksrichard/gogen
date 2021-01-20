@@ -1,7 +1,10 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"github.com/cbroglie/mustache"
+	"github.com/ksrichard/gogen/util"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -9,6 +12,17 @@ import (
 )
 
 func Generate(templateDir string, outputDir string, vars map[string]string) error {
+	// validation
+	if !util.IsDir(templateDir) {
+		return errors.New(fmt.Sprintf("Template directory '%s' is not a directory!", templateDir))
+	}
+
+	// create/replace output dir
+	err := util.RemoveCreateDir(outputDir)
+	if err != nil {
+		return err
+	}
+
 	return filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -22,7 +36,7 @@ func Generate(templateDir string, outputDir string, vars map[string]string) erro
 				if renderErr != nil {
 					return renderErr
 				}
-				mkdirErr := os.MkdirAll(outputDir + "/" + renderedPaths, os.ModePerm)
+				mkdirErr := os.MkdirAll(outputDir+"/"+renderedPaths, os.ModePerm)
 				if mkdirErr != nil {
 					return mkdirErr
 				}
@@ -37,7 +51,7 @@ func Generate(templateDir string, outputDir string, vars map[string]string) erro
 				renderedFileName, fileNameRenderErr := mustache.Render(relativePath, vars)
 				renderedTemplate, renderErr := mustache.Render(string(buf), vars)
 				if fileNameRenderErr == nil && renderErr == nil {
-					writeErr := ioutil.WriteFile(outputDir + "/" + renderedFileName, []byte(renderedTemplate), os.ModePerm)
+					writeErr := ioutil.WriteFile(outputDir+"/"+renderedFileName, []byte(renderedTemplate), os.ModePerm)
 					if writeErr != nil {
 						return writeErr
 					}

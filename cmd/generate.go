@@ -34,18 +34,7 @@ var generateCmd = &cobra.Command{
 		outputDir, _ := cmd.Flags().GetString("output-dir")
 		vars, _ := cmd.Flags().GetStringToString("vars")
 
-		// validation
-		if !util.IsDir(templateDir) {
-			return errors.New(fmt.Sprintf("Template directory '%s' is not a directory!", templateDir))
-		}
-
-		// create/replace output dir
-		err := util.RemoveCreateDir(outputDir)
-		if err != nil {
-			return err
-		}
-
-		err = service.Generate(templateDir, outputDir, vars)
+		err := service.Generate(templateDir, outputDir, vars)
 		if err != nil {
 			return err
 		}
