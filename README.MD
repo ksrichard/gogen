@@ -1,4 +1,4 @@
-![Logo](images/logo.png | width=250)
+![Logo](images/logo.png)
 # gogen
 A simple CLI and library to generate any kind of projects from any kind of templates! (just like maven archetype, but its much easier)
 
