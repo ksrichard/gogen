@@ -1,6 +1,7 @@
 ![Logo](images/logo.png)
 # gogen
 A simple CLI and library to generate any kind of projects from any kind of templates! (just like maven archetype, but its much easier)
+This CLI tool can be a very good replacement of `sed` commands when need to replace several values in configuration files.
 
 There is absolutely no limitation in programming language or whatever you want to generate from a file and directory based template!
 
@@ -62,5 +63,11 @@ func main() {
 	}
 }
 ```
+
+## TODO (upcoming features)
+- [ ] Generate results from single file template
+  - [ ] Add support to print result instead of writing to output directory
+- [ ] Support more complex variables than just simple string key->value ones
+
 
 
