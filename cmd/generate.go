@@ -16,10 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"errors"
-	"fmt"
 	"github.com/ksrichard/gogen/service"
-	"github.com/ksrichard/gogen/util"
 	"github.com/spf13/cobra"
 )
 
