@@ -2,9 +2,8 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - "*"
 
 jobs:
 
@@ -29,5 +28,6 @@ jobs:
       with:
         version: latest
         args: release --rm-dist
+
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
