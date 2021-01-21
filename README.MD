@@ -26,6 +26,13 @@ You can use everything in directory/file names and files content that can be don
 
 **Note**: Here when you pass any variables to the generator, they will be used for generating both folder/file names and contents of files!
 
+## Installation
+You can install the CLI using homebrew (or local build, see next sectioin):
+```
+brew tap ksrichard/tap
+brew install gogen
+```
+
 ## Example usage of CLI
 - Build the CLI using the following command executed in root of the project: `go build`
 
