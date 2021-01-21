@@ -27,6 +27,7 @@ brews:
     tap:
       owner: ksrichard
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     download_strategy: CurlDownloadStrategy.
     folder: Formula
     caveats: "./gogen generate --help
