@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"fmt"
 	"github.com/cbroglie/mustache"
 	"github.com/ksrichard/gogen/util"
@@ -11,10 +10,11 @@ import (
 	"strings"
 )
 
+// Generate - generating results recursively from a template folder to an output folder using variables
 func Generate(templateDir string, outputDir string, vars map[string]string) error {
 	// validation
 	if !util.IsDir(templateDir) {
-		return errors.New(fmt.Sprintf("Template directory '%s' is not a directory!", templateDir))
+		return fmt.Errorf("template directory '%s' is not a directory", templateDir)
 	}
 
 	// create/replace output dir

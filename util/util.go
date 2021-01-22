@@ -4,6 +4,7 @@ import (
 	"os"
 )
 
+// IsDir - Check if input path is a directory
 func IsDir(dirInput string) bool {
 	fi, err := os.Stat(dirInput)
 	if err != nil {
@@ -19,6 +20,7 @@ func IsDir(dirInput string) bool {
 	return false
 }
 
+//RemoveCreateDir - create a directory structure, if still exist -> delete it before
 func RemoveCreateDir(folderPath string) error {
 	if IsDir(folderPath) {
 		err := os.RemoveAll(folderPath)
@@ -27,8 +29,4 @@ func RemoveCreateDir(folderPath string) error {
 		}
 	}
 	return os.MkdirAll(folderPath, os.ModePerm)
-}
-
-func GetCurrentDir() (string, error) {
-	return os.Getwd()
 }
