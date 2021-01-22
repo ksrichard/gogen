@@ -32,5 +32,3 @@ func RemoveCreateDir(folderPath string) error {
 func GetCurrentDir() (string, error) {
 	return os.Getwd()
 }
-
-

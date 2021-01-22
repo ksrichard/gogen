@@ -71,6 +71,7 @@ func main() {
 ```
 
 ## TODO (upcoming features)
+- [ ] Support input from stdin
 - [ ] Generate results from single file template
   - [ ] Add support to print result instead of writing to output directory
 - [ ] Support more complex variables than just simple string key->value ones

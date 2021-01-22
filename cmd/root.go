@@ -24,7 +24,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "gogen",
 	Short: "Generating any projects from templates",
-	Long: `Simple project/folder structure generator from templates`,
+	Long:  `Simple project/folder structure generator from templates`,
 }
 
 func Execute() {
