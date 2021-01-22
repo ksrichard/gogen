@@ -39,7 +39,7 @@ func TestGenerateRequiredFlags(t *testing.T) {
 		t.Errorf("Output should contain '%s'!", generateCmd.UsageString())
 	}
 	requiredFlagsStr := "required flag(s) \"output-dir\", \"template-dir\" not set"
-	if !strings.Contains(cmdErr.Error(), requiredFlagsStr) {
+	if cmdErr != nil && !strings.Contains(cmdErr.Error(), requiredFlagsStr) {
 		t.Errorf("Output should contain '%s'!", requiredFlagsStr)
 	}
 }
