@@ -24,19 +24,18 @@ import (
 // generateCmd represents the generate command
 var generateCmd = &cobra.Command{
 	Use:   "generate",
-	Short: "Generating projects/folder structures based on a template",
-	Long:  `Generating projects/folder structures based on a template`,
+	Short: "Generating projects/folder structures/files based on a template",
+	Long:  `Generating projects/folder structures/files based on a template`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// inputs
-		templateDir, _ := cmd.Flags().GetString("template-dir")
-		outputDir, _ := cmd.Flags().GetString("output-dir")
+		input, _ := cmd.Flags().GetString("input")
+		output, _ := cmd.Flags().GetString("output")
 		vars, _ := cmd.Flags().GetStringToString("vars")
-
-		err := service.Generate(templateDir, outputDir, vars)
+		outputType, _ := cmd.Flags().GetString("output-type")
+		err := service.Generate(input, output, outputType, vars)
 		if err != nil {
 			return err
 		}
-
 		return nil
 	},
 }
@@ -45,14 +44,14 @@ func init() {
 	rootCmd.AddCommand(generateCmd)
 
 	// template folder
-	generateCmd.Flags().StringP("template-dir", "t", "", "Template folder to be used for generation")
-	cobra.MarkFlagDirname(generateCmd.Flags(), "template-dir")
-	cobra.MarkFlagRequired(generateCmd.Flags(), "template-dir")
+	generateCmd.Flags().StringP("input", "i", "", "Template folder/file to be used for generation")
+	cobra.MarkFlagDirname(generateCmd.Flags(), "input")
+	cobra.MarkFlagRequired(generateCmd.Flags(), "input")
 
 	// output folder
-	generateCmd.Flags().StringP("output-dir", "o", "", "Output folder where result files will be generated")
-	cobra.MarkFlagDirname(generateCmd.Flags(), "output-dir")
-	cobra.MarkFlagRequired(generateCmd.Flags(), "output-dir")
+	generateCmd.Flags().StringP("output", "o", "", "Output folder/file where result will be generated\nNot applicable when output type is 'stdout'!")
+
+	generateCmd.Flags().StringP("output-type", "t", "folder", "Output type - file,folder,stdout.\nNot applicable when input is a folder!")
 
 	// variables
 	generateCmd.Flags().StringToStringP("vars", "v", map[string]string{}, "Variables for generation")

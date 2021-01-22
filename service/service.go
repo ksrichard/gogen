@@ -10,62 +10,135 @@ import (
 	"strings"
 )
 
-// Generate - generating results recursively from a template folder to an output folder using variables
-func Generate(templateDir string, outputDir string, vars map[string]string) error {
-	// validation
-	if !util.IsDir(templateDir) {
-		return fmt.Errorf("template directory '%s' is not a directory", templateDir)
+// Generate - generating results recursively from a template folder/file to an output folder using variables
+func Generate(input string, output string, outputType string, vars map[string]string) error {
+	// validate output type
+	if !isOutputTypeValid(outputType) {
+		return fmt.Errorf("Unknown output type!")
 	}
 
-	// create/replace output dir
-	err := util.RemoveCreateDir(outputDir)
-	if err != nil {
-		return err
-	}
+	// if using template dir
+	if util.IsDir(input) {
+		if output == "" {
+			return fmt.Errorf("Output must be set!")
+		}
 
-	return filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
+		// create/replace output dir
+		err := util.RemoveCreateDir(output)
 		if err != nil {
 			return err
 		}
-		if templateDir != path {
-			relativePath := strings.ReplaceAll(path, templateDir, "")
 
-			// if directory, create them
-			if info.IsDir() {
-				renderedPaths, renderErr := mustache.Render(relativePath, vars)
-				if renderErr != nil {
-					return renderErr
-				}
-				mkdirErr := os.MkdirAll(outputDir+"/"+renderedPaths, os.ModePerm)
-				if mkdirErr != nil {
-					return mkdirErr
-				}
+		return filepath.Walk(input, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
 			}
+			if input != path {
+				relativePath := strings.ReplaceAll(path, input, "")
 
-			// if file, generate file to target dir
-			if !info.IsDir() {
-				buf, readErr := ioutil.ReadFile(path)
-				if readErr != nil {
-					return readErr
-				}
-				renderedFileName, fileNameRenderErr := mustache.Render(relativePath, vars)
-				renderedTemplate, renderErr := mustache.Render(string(buf), vars)
-				if fileNameRenderErr == nil && renderErr == nil {
-					writeErr := ioutil.WriteFile(outputDir+"/"+renderedFileName, []byte(renderedTemplate), os.ModePerm)
-					if writeErr != nil {
-						return writeErr
-					}
-				} else {
-					if fileNameRenderErr != nil {
-						return fileNameRenderErr
-					}
+				// if directory, create them
+				if info.IsDir() {
+					renderedPaths, renderErr := mustache.Render(relativePath, vars)
 					if renderErr != nil {
 						return renderErr
 					}
+					mkdirErr := os.MkdirAll(output+"/"+renderedPaths, os.ModePerm)
+					if mkdirErr != nil {
+						return mkdirErr
+					}
 				}
-			}
 
+				// if file, generate file to target dir
+				if !info.IsDir() {
+					buf, readErr := ioutil.ReadFile(path)
+					if readErr != nil {
+						return readErr
+					}
+					renderedFileName, fileNameRenderErr := mustache.Render(relativePath, vars)
+					renderedTemplate, renderErr := mustache.Render(string(buf), vars)
+					if fileNameRenderErr == nil && renderErr == nil {
+						writeErr := ioutil.WriteFile(output+"/"+renderedFileName, []byte(renderedTemplate), os.ModePerm)
+						if writeErr != nil {
+							return writeErr
+						}
+					} else {
+						if fileNameRenderErr != nil {
+							return fileNameRenderErr
+						}
+						if renderErr != nil {
+							return renderErr
+						}
+					}
+				}
+
+			}
+			return nil
+		})
+	}
+
+	// using file template
+	_, statErr := os.Stat(input)
+	if statErr != nil {
+		return statErr
+	}
+	buf, readErr := ioutil.ReadFile(input)
+	if readErr != nil {
+		return readErr
+	}
+	renderedFileName, fileNameRenderErr := mustache.Render(input, vars)
+	renderedTemplate, renderErr := mustache.Render(string(buf), vars)
+	if fileNameRenderErr == nil && renderErr == nil {
+		var outputWriteErr error
+
+		switch strings.ToLower(outputType) {
+		case "file":
+			if output == "" {
+				outputWriteErr = fmt.Errorf("Output must be set!")
+				break
+			}
+			writeErr := ioutil.WriteFile(output, []byte(renderedTemplate), os.ModePerm)
+			if writeErr != nil {
+				outputWriteErr = writeErr
+			}
+			break
+		case "folder":
+			if output == "" {
+				outputWriteErr = fmt.Errorf("Output must be set!")
+				break
+			}
+			writeErr := ioutil.WriteFile(output+"/"+renderedFileName, []byte(renderedTemplate), os.ModePerm)
+			if writeErr != nil {
+				outputWriteErr = writeErr
+			}
+			break
+		case "stdout":
+			fmt.Print(renderedTemplate)
+			outputWriteErr = nil
+			break
 		}
-		return nil
-	})
+
+		return outputWriteErr
+	} else {
+		if fileNameRenderErr != nil {
+			return fileNameRenderErr
+		}
+		if renderErr != nil {
+			return renderErr
+		}
+	}
+
+	return nil
+}
+
+func isOutputTypeValid(outputType string) bool {
+	switch strings.ToLower(outputType) {
+	case "file":
+		return true
+	case "folder":
+		return true
+	case "stdout":
+		return true
+	default:
+		return false
+	}
 }

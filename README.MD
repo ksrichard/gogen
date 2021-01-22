@@ -62,7 +62,7 @@ import (
 )
 
 func main() {
-	err := gogen.Generate("examples/simple-project", "output/GoTest", map[string]string{
+	err := gogen.GenerateFromDir("examples/simple-project", "output/GoTest", map[string]string{
 		"module": "GoTest",
 		"project_name": "Go Test",
 	})
@@ -74,9 +74,9 @@ func main() {
 
 ## TODO (upcoming features)
 - [ ] Support input from stdin
-- [ ] Generate results from single file template
-  - [ ] Add support to print result instead of writing to output directory
-- [ ] Support more complex variables than just simple string key->value ones
+- [x] Generate result from single file template
+  - [x] Add support to print result instead of writing to file/output directory
+- [ ] Support more complex variables than just simple string key -> value ones
 
 
 
