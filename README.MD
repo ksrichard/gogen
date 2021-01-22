@@ -62,7 +62,7 @@ import (
 )
 
 func main() {
-	err := gogen.GenerateFromDir("examples/simple-project", "output/GoTest", map[string]string{
+	err := gogen.Generate("examples/simple-project", "output/GoTest", "folder", map[string]string{
 		"module": "GoTest",
 		"project_name": "Go Test",
 	})
