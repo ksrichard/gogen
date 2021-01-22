@@ -5,6 +5,8 @@
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/ksrichard/gogen.svg)](https://github.com/ksrichard/gogen)
 [![GitHub release](https://img.shields.io/github/release/ksrichard/gogen.svg)](https://github.com/ksrichard/gogen/releases/latest/)
 
+Code coverage: https://gocover.io/github.com/ksrichard/gogen
+
 # gogen
 A simple CLI and library to generate any kind of projects from any kind of templates! (just like maven archetype, but its much easier)
 This CLI tool can be a very good replacement of `sed` commands when need to replace several values in configuration files.
