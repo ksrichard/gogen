@@ -47,7 +47,7 @@ brew install gogen
 
 - Then simply run an example:
 ```
-./gogen generate -t examples/simple-project/ -o output/GoTest -v module=GoTest -v project_name="Go Test"
+./gogen generate -i examples/simple-project/ -o output/GoTest -v module=GoTest -v project_name="Go Test"
 ```
 
 - Finally see the output folder that was generated (and also check for file contents):
