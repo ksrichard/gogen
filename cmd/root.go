@@ -28,6 +28,7 @@ var rootCmd = &cobra.Command{
 	Long:  `Simple project/folder structure generator from templates`,
 }
 
+// Execute root command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
