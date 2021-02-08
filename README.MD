@@ -38,6 +38,9 @@ Flags:
 You can use everything in directory/file names and files content that can be done in [Mustache](https://mustache.github.io/) (for loops etc...)
 
 **Note**: Here when you pass any variables to the generator, they will be used for generating both folder/file names and contents of files!
+**Note**: When you use multiple sources for variables (more files and/or inline parameters), the order of the overwriting values is the following:
+- all YAML files in order
+- all command line parameters
 
 ## Installation
 You can install the CLI using homebrew (or local build, see next section):
