@@ -30,19 +30,9 @@ brews:
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     download_strategy: CurlDownloadStrategy
     folder: Formula
-    caveats: "./gogen generate --help
-              Generating projects/folder structures based on a template
-
-              Usage:
-                gogen generate [flags]
-
-              Flags:
-                -h, --help                  help for generate
-                -o, --output-dir string     Output folder where result files will be generated
-                -t, --template-dir string   Template folder to be used for generation
-                -v, --vars stringToString   Variables for generation (default [])"
+    caveats: "Powerful dynamic template based generation"
     homepage: "https://github.com/ksrichard/gogen"
-    description: "Simple yet powerful dynamic project generation"
+    description: "Powerful dynamic template based generation"
 
 archives:
   - replacements:

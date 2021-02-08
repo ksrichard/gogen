@@ -26,32 +26,61 @@ Usage:
   gogen generate [flags]
 
 Flags:
-  -h, --help                  help for generate
-  -o, --output-dir string     Output folder where result files will be generated
-  -t, --template-dir string   Template folder to be used for generation
-  -v, --vars stringToString   Variables for generation (default [])
+  -h, --help                    help for generate
+  -i, --input string            Template folder/file to be used for generation
+  -o, --output string           Output folder/file where result will be generated
+                                Not applicable when output type is 'stdout'!
+  -t, --output-type string      Output type - file,folder,stdout.
+                                Not applicable when input is a folder! (default "folder")
+  -v, --vars stringToString     Variables for generation (default [])
+  -f, --vars-file stringArray   Variables from file (YAML) for generation
 ```
 You can use everything in directory/file names and files content that can be done in [Mustache](https://mustache.github.io/) (for loops etc...)
 
 **Note**: Here when you pass any variables to the generator, they will be used for generating both folder/file names and contents of files!
 
 ## Installation
-You can install the CLI using homebrew (or local build, see next sectioin):
+You can install the CLI using homebrew (or local build, see next section):
 ```
 brew tap ksrichard/tap
 brew install gogen
 ```
 
-## Example usage of CLI
+## Example usages of CLI
 - Build the CLI using the following command executed in root of the project: `go build`
+**Note:** You can combine any of the input/output, output types parameters to fit to your needs of course!
 
-- Then simply run an example:
-```
-./gogen generate -i examples/simple-project/ -o output/GoTest -v module=GoTest -v project_name="Go Test"
-```
-
-- Finally see the output folder that was generated (and also check for file contents):
-![Logo](images/screenshot1.png)
+    - Generate a project/folder structure:
+    ```
+    ./gogen generate -i examples/simple-project/ -o output/GoTest -v module=GoTest -v project_name="Go Test"
+    ```
+    See the output folder that was generated (and also check for file contents):
+    ![Logo](images/screenshot1.png)
+    
+    - Generate single file:
+    ```
+    ./gogen generate -i ./examples/simple-project/main.go -t stdout -v project_name="Test Project"
+    ```
+    - Generate single file to file output:
+    ```
+    ./gogen generate -i ./examples/simple-project/main.go -t file -o test.go -v project_name="Test Project"
+    ```
+    - Generate using variables from file, template from pipe:
+    ```bash
+    echo "{{testRootValue}} -->> {{#projects}}\"{{name}},{{url}} -> {{#data}}{{value}}{{/data}}\" {{/projects}}" | ./gogen generate -t stdout -f ./examples/test.yaml
+    ```
+    - Generate using variables from file (properties overwrite from another file), template from pipe:
+    ```bash
+    echo "{{testRootValue}} -->> {{#projects}}\"{{name}},{{url}} -> {{#data}}{{value}}{{/data}}\" {{/projects}}" | ./gogen generate -t stdout -f ./examples/test.yaml -f ./examples/test2.yaml
+    ```
+    - Generate using variables from file (properties overwrite from command line option), template from pipe:
+    ```bash
+    echo "{{testRootValue}} -->> {{#projects}}\"{{name}},{{url}} -> {{#data}}{{value}}{{/data}}\" {{/projects}}" | ./gogen generate -t stdout -f ./examples/test.yaml -v testRootValue="someTest2"
+    ```
+    - Generate using variables from file (properties overwrite from command line option), template from pipe:
+    ```bash
+    echo "{{testRootValue}} -->> {{#projects}}\"{{name}},{{url}} -> {{#data}}{{value}}{{/data}}\" {{/projects}}" | ./gogen generate -t stdout -f ./examples/test.yaml -v testRootValue="someTest2"
+    ```
 
 ## Example usage of Library
 ```go
@@ -62,7 +91,7 @@ import (
 )
 
 func main() {
-	err := gogen.Generate("examples/simple-project", "output/GoTest", "folder", map[string]string{
+	err := gogen.Generate("examples/simple-project", "output/GoTest", "folder", map[string]interface{
 		"module": "GoTest",
 		"project_name": "Go Test",
 	})
@@ -73,10 +102,10 @@ func main() {
 ```
 
 ## TODO (upcoming features)
-- [ ] Support input from stdin
+- [x] Support input from stdin
 - [x] Generate result from single file template
   - [x] Add support to print result instead of writing to file/output directory
-- [ ] Support more complex variables than just simple string key -> value ones
+- [x] Support more complex variables than just simple string key -> value ones
 
 
 

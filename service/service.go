@@ -11,7 +11,7 @@ import (
 )
 
 // Generate - generating results recursively from a template folder/file to an output folder using variables
-func Generate(input string, output string, outputType string, vars map[string]string) error {
+func Generate(input string, output string, outputType string, vars map[string]interface{}) error {
 	// validate output type
 	if !isOutputTypeValid(outputType) {
 		return fmt.Errorf("Unknown output type!")
@@ -76,17 +76,25 @@ func Generate(input string, output string, outputType string, vars map[string]st
 		})
 	}
 
-	// using file template
+	// using file/stdin template
+	var inputData string
+	var renderedFileName = ""
+	var fileNameRenderErr error = nil
+
+	// read input
 	_, statErr := os.Stat(input)
-	if statErr != nil {
-		return statErr
+	if statErr == nil { // having a file input
+		buf, readErr := ioutil.ReadFile(input)
+		if readErr != nil {
+			return readErr
+		}
+		inputData = string(buf)
+		renderedFileName, fileNameRenderErr = mustache.Render(input, vars)
+	} else { // having stdin input
+		inputData = input
 	}
-	buf, readErr := ioutil.ReadFile(input)
-	if readErr != nil {
-		return readErr
-	}
-	renderedFileName, fileNameRenderErr := mustache.Render(input, vars)
-	renderedTemplate, renderErr := mustache.Render(string(buf), vars)
+
+	renderedTemplate, renderErr := mustache.Render(inputData, vars)
 	if fileNameRenderErr == nil && renderErr == nil {
 		var outputWriteErr error
 

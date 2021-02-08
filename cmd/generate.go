@@ -18,6 +18,7 @@ limitations under the License.
 
 import (
 	"github.com/ksrichard/gogen/service"
+	"github.com/ksrichard/gogen/util"
 	"github.com/spf13/cobra"
 )
 
@@ -30,9 +31,26 @@ var generateCmd = &cobra.Command{
 		// inputs
 		input, _ := cmd.Flags().GetString("input")
 		output, _ := cmd.Flags().GetString("output")
+
+		// variables from flag(s) or yaml file
 		vars, _ := cmd.Flags().GetStringToString("vars")
+		varsConverted := make(map[string]interface{}, len(vars))
+		for k, v := range vars {
+			varsConverted[k] = v
+		}
+		varsMap := varsConverted
+
+		// vars from file(s)
+		varsFiles, _ := cmd.Flags().GetStringArray("vars-file")
+		for _, file := range varsFiles {
+			varsFromFile, _ := util.GetVarsFromFile(file)
+			if varsFromFile != nil {
+				varsMap = util.MergeMaps(varsMap, varsFromFile, varsConverted)
+			}
+		}
+
 		outputType, _ := cmd.Flags().GetString("output-type")
-		err := service.Generate(input, output, outputType, vars)
+		err := service.Generate(input, output, outputType, varsMap)
 		if err != nil {
 			return err
 		}
@@ -55,4 +73,14 @@ func init() {
 
 	// variables
 	generateCmd.Flags().StringToStringP("vars", "v", map[string]string{}, "Variables for generation")
+	generateCmd.Flags().StringArrayP("vars-file", "f", []string{}, "Variables from file (YAML) for generation")
+
+	// if having a piped input
+	result, _ := util.ReadStdIn()
+	if result != "" {
+		// set input automatically
+		inputFlag := generateCmd.Flag("input")
+		inputFlag.Changed = true
+		inputFlag.Value.Set(result)
+	}
 }

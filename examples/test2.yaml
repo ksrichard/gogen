@@ -1,0 +1,14 @@
+---
+projects:
+  - name: resque
+    url: http://github.com/defunkt/resque
+    description: A Redis-backed Ruby library for queueing and working.
+    data:
+      - value: test5
+  - name: mustache
+    url: http://defunkt.github.com/mustache
+    description: Logic-less templates.
+    data:
+      - value: test6
+testRootValue: "someTest3"
+---
