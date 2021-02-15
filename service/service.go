@@ -54,7 +54,7 @@ func Generate(input string, output string, outputType string, vars map[string]in
 					if readErr != nil {
 						return readErr
 					}
-					renderedFileName, fileNameRenderErr := mustache.Render(relativePath, vars)
+					renderedFileName, fileNameRenderErr := mustache.Render(info.Name(), vars)
 					renderedTemplate, renderErr := mustache.Render(string(buf), vars)
 					if fileNameRenderErr == nil && renderErr == nil {
 						writeErr := ioutil.WriteFile(output+"/"+renderedFileName, []byte(renderedTemplate), os.ModePerm)
